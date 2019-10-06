@@ -3,3 +3,6 @@ graph:
 
 sat:
 	g++ code/sat*.cpp -o sat.out -I ./headers/
+
+clean:
+	rm *.out

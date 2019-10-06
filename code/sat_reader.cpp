@@ -27,9 +27,9 @@ int main(int argc, char const *argv[]){
       int i = abs(temp/g_dash_max)+1;
       i= (j==0)?i-1:i;
       j=(j==0)?g_dash_max:j;
-      // if (temp>0){
+      if (temp>0){
           v.push_back(make_tuple(i,j));
-      // }
+      }
 
       // v.push_back(temp);
       // ct++;
