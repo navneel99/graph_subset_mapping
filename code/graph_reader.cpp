@@ -39,7 +39,6 @@ EXPRESSION one_to_one_clause(int g_dash_max, int g_max){
   EXPRESSION one2one_clauses;
   for ( int i = 1; i<=g_max;i++){
     for (int j = 1; j<=g_dash_max;j++){
-
       int first_map = -1 *create_var_number(i,j,g_dash_max);
 
       if (i != g_max){  //-Nij V -Nkj
@@ -183,11 +182,10 @@ int main(int argc, char const *argv[]) {
   cout<<"Graph G' Max node is: "<<g_dash_max<<endl;
   EXPRESSION one2one_clauses = one_to_one_clause(g_dash_max,g_max);
   one2one_clauses = surjection_clause(one2one_clauses,g_dash_max,g_max);
-  EXPRESSION all_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash,g_adj_mat,g_dash_adj_mat);
-  num_clauses = all_clauses.size();
+  one2one_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash,g_adj_mat,g_dash_adj_mat);
+  num_clauses = one2one_clauses.size();
   num_variables = g_max * g_dash_max;
-  write_clause_in_file(output_file,all_clauses,num_clauses,num_variables);
-
+  write_clause_in_file(output_file,one2one_clauses,num_clauses,num_variables);
 
   return 0;
 }
