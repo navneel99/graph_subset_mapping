@@ -28,8 +28,12 @@ void write_clause_in_file(string filename,EXPRESSION all_clauses, int num_clause
 //Nij is written as X(i*m + j) where m is cardinality of G' and n is of G
 
 int create_var_number(int i,int j, int g_dash_max){
-  return (i*g_dash_max + j);
+  return ((i-1)*g_dash_max + j);
 }
+
+// EXPRESSION edge_clause(GRAPH g, GRAPH g_dash){
+//
+// }
 
 EXPRESSION one_to_one_clause(int g_dash_max, int g_max){
   EXPRESSION one2one_clauses;
@@ -91,6 +95,9 @@ int main(int argc, char const *argv[]) {
     max_node = max(stoi(s2),max_node);
   }
   g_max = max_node;
+  ofstream infofile;
+  infofile.open("info");
+  infofile << g_max<<" "<<g_dash_max<<"\n";
   print_graph(g);
   cout<<"Graph G Max node is: "<<g_max<<endl;
   print_graph(g_dash);
