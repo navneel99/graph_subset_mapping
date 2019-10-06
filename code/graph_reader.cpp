@@ -121,6 +121,7 @@ int main(int argc, char const *argv[]) {
 
   input_file = argv[1];
   output_file = argv[2];
+  cout<<output_file<<endl;
 
   ifstream file(input_file);
   int max_node=0;
@@ -167,19 +168,19 @@ int main(int argc, char const *argv[]) {
       g_adj_mat[stoi(s1)][stoi(s2)] = 1;
     }
   }
-  print_matrix(g_dash_adj_mat);
-  cout<<"-x-x-x-x-x-x-"<<endl;
-  print_matrix(g_adj_mat);
+  // print_matrix(g_dash_adj_mat);
+  // cout<<"-x-x-x-x-x-x-"<<endl;
+  // print_matrix(g_adj_mat);
 
 
   g_max = max_node;
   ofstream infofile;
   infofile.open("info");
   infofile << g_max<<" "<<g_dash_max<<"\n";
-  print_graph(g);
-  cout<<"Graph G Max node is: "<<g_max<<endl;
-  print_graph(g_dash);
-  cout<<"Graph G' Max node is: "<<g_dash_max<<endl;
+  // print_graph(g);
+  // cout<<"Graph G Max node is: "<<g_max<<endl;
+  // print_graph(g_dash);
+  // cout<<"Graph G' Max node is: "<<g_dash_max<<endl;
   EXPRESSION one2one_clauses = one_to_one_clause(g_dash_max,g_max);
   one2one_clauses = surjection_clause(one2one_clauses,g_dash_max,g_max);
   one2one_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash,g_adj_mat,g_dash_adj_mat);

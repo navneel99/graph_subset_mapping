@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
 inputfile="${1}.graphs"
 outputfile="${1}.satinput"
-./run.out $inputfile $outputfile
+./graph.out ${inputfile} ${outputfile}

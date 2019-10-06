@@ -2,9 +2,18 @@
 
 Problem statement pdf is attached.
 
+### The Checking will be as follows:
+
+1. ./compile.sh
+2. ./run1.sh <i>FNAME</i>
+3. ./run2.sh <i>FNAME</i>
+
+<b> minisat will be called by the TA. The output file will be <b>FNAME.satoutput</b>
+
+
 ### For Debugging purposes
 
-Use the <i>debugging.sh</i> file.(In progress)
+Use the <i>debugging.sh</i> file.
 
 <code> ./debugging.sh <i>n1 e1 n2 e2 FILE_NAME</i></code>
 
