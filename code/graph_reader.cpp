@@ -66,7 +66,7 @@ EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, vector
     EDGE c_e = g[i];
     for (int j = 1; j<g_dash_adj.size();j++){
       for (int l = 1; l<g_dash_adj.size();l++){
-        if (g_dash_adj[j][l] == 0){
+        if ((j != l) && (g_dash_adj[j][l] == 0)){
           CLAUSE c = {-1 * create_var_number(get<0>(c_e),j,g_dash_max),-1 * create_var_number(get<1>(c_e),l,g_dash_max)};
           e.push_back(c);
         }
@@ -77,7 +77,7 @@ EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, vector
     EDGE c_e = g_dash[j];
     for (int i = 1; i< g_adj.size();i++){
       for (int k = 1; k<g_adj.size();k++){
-        if (g_adj[i][k] == 0){
+        if ((i != k) && (g_adj[i][k] == 0)){
           CLAUSE c = {-1 * create_var_number(i,get<0>(c_e),g_dash_max),-1 * create_var_number(k,get<1>(c_e),g_dash_max)};
           e.push_back(c);
         }
@@ -87,7 +87,7 @@ EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, vector
   return e;
 }
 
-EXPRESSION surjection_clause(EXPRESSION e, int g_dash_max, int g_max){
+EXPRESSION total_function_clause(EXPRESSION e, int g_dash_max, int g_max){
   for (int i = 1; i<=g_max; i++){
     CLAUSE c;
     for (int j = 1; j<=g_dash_max; j++){
@@ -182,7 +182,7 @@ int main(int argc, char const *argv[]) {
   // print_graph(g_dash);
   // cout<<"Graph G' Max node is: "<<g_dash_max<<endl;
   EXPRESSION one2one_clauses = one_to_one_clause(g_dash_max,g_max);
-  one2one_clauses = surjection_clause(one2one_clauses,g_dash_max,g_max);
+  one2one_clauses = total_function_clause(one2one_clauses,g_dash_max,g_max);
   one2one_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash,g_adj_mat,g_dash_adj_mat);
   num_clauses = one2one_clauses.size();
   num_variables = g_max * g_dash_max;
