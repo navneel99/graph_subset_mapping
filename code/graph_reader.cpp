@@ -61,27 +61,21 @@ EXPRESSION one_to_one_clause(int g_dash_max, int g_max){
   return one2one_clauses;
 }
 
-EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, vector<vector<int> > g_adj,vector<vector<int> > g_dash_adj){
+EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, GRAPH g_false_edges, GRAPH g_dash_false_edges){
   for (int i = 0; i< g.size(); i++){
-    EDGE c_e = g[i];
-    for (int j = 1; j<g_dash_adj.size();j++){
-      for (int l = 1; l<g_dash_adj.size();l++){
-        if ((j != l) && (g_dash_adj[j][l] == 0)){
-          CLAUSE c = {-1 * create_var_number(get<0>(c_e),j,g_dash_max),-1 * create_var_number(get<1>(c_e),l,g_dash_max)};
-          e.push_back(c);
-        }
-      }
+    EDGE c1_e = g[i];
+    for (int j = 0; j < g_dash_false_edges.size(); j++){
+      EDGE c2_e = g_dash_false_edges[j];
+      CLAUSE c = {-1 * create_var_number(get<0>(c1_e),get<0>(c2_e),g_dash_max),-1 * create_var_number(get<1>(c1_e),get<1>(c2_e),g_dash_max)};
+      e.push_back(c);
     }
   }
   for (int j = 0; j<g_dash.size();j++){
-    EDGE c_e = g_dash[j];
-    for (int i = 1; i< g_adj.size();i++){
-      for (int k = 1; k<g_adj.size();k++){
-        if ((i != k) && (g_adj[i][k] == 0)){
-          CLAUSE c = {-1 * create_var_number(i,get<0>(c_e),g_dash_max),-1 * create_var_number(k,get<1>(c_e),g_dash_max)};
-          e.push_back(c);
-        }
-      }
+    EDGE c1_e = g_dash[j];
+    for (int j = 0; j < g_false_edges.size(); j++){
+      EDGE c2_e = g_false_edges[j];
+      CLAUSE c = {-1 * create_var_number(get<0>(c1_e),get<0>(c2_e),g_dash_max),-1 * create_var_number(get<1>(c1_e),get<1>(c2_e),g_dash_max)};
+      e.push_back(c);
     }
   }
   return e;
@@ -116,6 +110,8 @@ int main(int argc, char const *argv[]) {
   GRAPH false_g, false_g_dash; //false edges of G and G'
   int g_dash_max,g_max; //Max node value in each of the graph.
   int num_clauses,num_variables;
+  GRAPH g_false_edges;
+  GRAPH g_dash_false_edges;
   vector<vector<int> > g_adj_mat,g_dash_adj_mat;
 
 
@@ -129,6 +125,14 @@ int main(int argc, char const *argv[]) {
   while (file >> s1){
     file >> s2;
     if (s1 == "0" && s2 == "0"){
+        for (int i = 1; i < g_dash_adj_mat.size(); i++){
+          for (int j = 1; j < g_dash_adj_mat.size(); j++){
+            if ((i != j) && (g_dash_adj_mat[i][j] == 0)){
+              g_false_edges.push_back(make_tuple(i, j));
+            }
+          }
+        }
+        g_dash_adj_mat.clear();
         g_dash_max = max_node;
         GRAPH_FLAG=false;
         max_node = 0;
@@ -168,6 +172,14 @@ int main(int argc, char const *argv[]) {
       g_adj_mat[stoi(s1)][stoi(s2)] = 1;
     }
   }
+  for (int i = 1; i < g_adj_mat.size(); i++){
+    for (int j = 1; j < g_adj_mat.size(); j++){
+      if ((i != j) && (g_adj_mat[i][j] == 0)){
+        g_false_edges.push_back(make_tuple(i, j));
+      }
+    }
+  }
+  g_adj_mat.clear();
   // print_matrix(g_dash_adj_mat);
   // cout<<"-x-x-x-x-x-x-"<<endl;
   // print_matrix(g_adj_mat);
@@ -183,7 +195,7 @@ int main(int argc, char const *argv[]) {
   // cout<<"Graph G' Max node is: "<<g_dash_max<<endl;
   EXPRESSION one2one_clauses = one_to_one_clause(g_dash_max,g_max);
   one2one_clauses = total_function_clause(one2one_clauses,g_dash_max,g_max);
-  one2one_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash,g_adj_mat,g_dash_adj_mat);
+  one2one_clauses  = edge_clause(one2one_clauses,g_dash_max,g,g_dash, g_false_edges, g_dash_false_edges);
   num_clauses = one2one_clauses.size();
   num_variables = g_max * g_dash_max;
   write_clause_in_file(output_file,one2one_clauses,num_clauses,num_variables);
