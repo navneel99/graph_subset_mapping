@@ -66,6 +66,7 @@ EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, GRAPH 
     EDGE c1_e = g[i];
     for (int j = 0; j < g_dash_false_edges.size(); j++){
       EDGE c2_e = g_dash_false_edges[j];
+      // cout << get<0>(c2_e)<<" "<<get<1>(c2_e)<<" ";
       CLAUSE c = {-1 * create_var_number(get<0>(c1_e),get<0>(c2_e),g_dash_max),-1 * create_var_number(get<1>(c1_e),get<1>(c2_e),g_dash_max)};
       e.push_back(c);
     }
@@ -74,7 +75,9 @@ EXPRESSION edge_clause(EXPRESSION e,int g_dash_max,GRAPH g, GRAPH g_dash, GRAPH 
     EDGE c1_e = g_dash[j];
     for (int j = 0; j < g_false_edges.size(); j++){
       EDGE c2_e = g_false_edges[j];
-      CLAUSE c = {-1 * create_var_number(get<0>(c1_e),get<0>(c2_e),g_dash_max),-1 * create_var_number(get<1>(c1_e),get<1>(c2_e),g_dash_max)};
+      // cout <<
+      // cout << get<0>(c2_e)<<" "<<get<1>(c2_e)<<endl;
+      CLAUSE c = {-1 * create_var_number(get<0>(c2_e),get<0>(c1_e),g_dash_max),-1 * create_var_number(get<1>(c2_e),get<1>(c1_e),g_dash_max)};
       e.push_back(c);
     }
   }
@@ -128,7 +131,7 @@ int main(int argc, char const *argv[]) {
         for (int i = 1; i < g_dash_adj_mat.size(); i++){
           for (int j = 1; j < g_dash_adj_mat.size(); j++){
             if ((i != j) && (g_dash_adj_mat[i][j] == 0)){
-              g_false_edges.push_back(make_tuple(i, j));
+              g_dash_false_edges.push_back(make_tuple(i, j));
             }
           }
         }
@@ -179,10 +182,10 @@ int main(int argc, char const *argv[]) {
       }
     }
   }
+  print_matrix(g_adj_mat);
   g_adj_mat.clear();
   // print_matrix(g_dash_adj_mat);
   // cout<<"-x-x-x-x-x-x-"<<endl;
-  // print_matrix(g_adj_mat);
 
 
   g_max = max_node;
